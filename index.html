@@ -88,7 +88,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyBq3M6NlHFAKMlXR2B7AzmRBB3TNWqS9TU",
+            apiKey: "AIzaSyBq3M6NlHFAKMlXR2B7AzmRBB3TNwqS9TU",
             authDomain: "orders-3fc07.firebaseapp.com",
             projectId: "orders-3fc07",
             storageBucket: "orders-3fc07.appspot.com",
@@ -106,7 +106,7 @@
                 const orderData = snapshot.val();
                 if (orderData) {
                     statusDisplay.style.display = 'block';
-                    statusDisplay.innerHTML = `Order Status: <strong>${orderData.status}</strong>`;
+                    statusDisplay.innerHTML = `Customer Name: <strong>${orderData.customerName}</strong><br>Order Status: <strong>${orderData.status}</strong>`;
                     videoDisplay.style.display = 'block';
                     switch (orderData.status) {
                         case "Processing":
@@ -115,7 +115,7 @@
                         case "Delayed":
                             videoDisplay.src = "delayed.mp4";
                             break;
-                         case "OutForDelivery":
+                        case "OutForDelivery":
                             videoDisplay.src = "outfordelivery.mp4";
                             break;
                         case "Failed":
