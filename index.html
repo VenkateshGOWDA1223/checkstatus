@@ -55,12 +55,19 @@
             border-left: 5px solid #2c99e5;
             color: #333;
             font-size: 16px;
+            display: none; /* Initially hidden */
+        }
+        video {
+            width: 100%; /* Responsive video width */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Consistent styling */
+            display: none; /* Initially hidden */
         }
         #companyLogo {
-            display: block;      /* Ensures the logo is block level to allow for margin settings */
-            max-width: 100%;     /* Makes sure the image is never bigger than the container */
-            height: auto;        /* Keeps the aspect ratio of the image */
-            margin: 0 auto 20px; /* Adds some space below the logo and centers it horizontally */
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto 20px;
         }
     </style>
 </head>
@@ -71,35 +78,63 @@
         <input type="text" id="orderId" placeholder="Enter Order ID">
         <button onclick="checkOrderStatus()">Check Status</button>
         <div id="orderStatus"></div>
+        <video id="statusAnimation" loop autoplay muted>
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
     <script>
-         const firebaseConfig = {
-  apiKey: "AIzaSyBq3M6NlHFAKMlXR2B7AzmRBB3TNWqS9TU",
-  authDomain: "orders-3fc07.firebaseapp.com",
-  projectId: "orders-3fc07",
-  storageBucket: "orders-3fc07.appspot.com",
-  messagingSenderId: "845653975774",
-  appId: "1:845653975774:web:b4b0adacc766c94498584f"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyBq3M6NlHFAKMlXR2B7AzmRBB3TNWqS9TU",
+            authDomain: "orders-3fc07.firebaseapp.com",
+            projectId: "orders-3fc07",
+            storageBucket: "orders-3fc07.appspot.com",
+            messagingSenderId: "845653975774",
+            appId: "1:845653975774:web:b4b0adacc766c94498584f"
+        };
 
         firebase.initializeApp(firebaseConfig);
 
         function checkOrderStatus() {
             const orderId = document.getElementById('orderId').value;
+            const statusDisplay = document.getElementById('orderStatus');
+            const videoDisplay = document.getElementById('statusAnimation');
             firebase.database().ref('orders/' + orderId).once('value', snapshot => {
                 const orderData = snapshot.val();
-                const statusDisplay = document.getElementById('orderStatus');
                 if (orderData) {
+                    statusDisplay.style.display = 'block';
                     statusDisplay.innerHTML = `Order Status: <strong>${orderData.status}</strong>`;
+                    videoDisplay.style.display = 'block';
+                    switch (orderData.status) {
+                        case "Processing":
+                            videoDisplay.src = "processing.mp4";
+                            break;
+                        case "Delayed":
+                            videoDisplay.src = "delayed.mp4";
+                            break;
+                         case "OutForDelivery":
+                            videoDisplay.src = "outfordelivery.mp4";
+                            break;
+                        case "Failed":
+                            videoDisplay.src = "failed.mp4";
+                            break;
+                        case "Delivered":
+                            videoDisplay.src = "delivered.mp4";
+                            break;
+                        default:
+                            videoDisplay.src = "default.mp4";
+                            break;
+                    }
+                    videoDisplay.load(); // Load the new video source
                 } else {
                     statusDisplay.innerHTML = "Order ID not found.";
+                    videoDisplay.style.display = 'none';
                 }
             });
         }
     </script>
 </body>
 </html>
-
