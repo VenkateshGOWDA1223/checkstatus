@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f8fa;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 340px;
+        }
+        h1 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #0084ff;
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #orderStatus {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f5ff;
+            border-left: 5px solid #2c99e5;
+            color: #333;
+            font-size: 16px;
+        }
+        #companyLogo {
+            display: block;      /* Ensures the logo is block level to allow for margin settings */
+            max-width: 100%;     /* Makes sure the image is never bigger than the container */
+            height: auto;        /* Keeps the aspect ratio of the image */
+            margin: 0 auto 20px; /* Adds some space below the logo and centers it horizontally */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="path_to_your_logo.png" alt="Company Logo" id="companyLogo">
+        <h1>Check Order Status</h1>
+        <input type="text" id="orderId" placeholder="Enter Order ID">
+        <button onclick="checkOrderStatus()">Check Status</button>
+        <div id="orderStatus"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+    <script>
+         const firebaseConfig = {
+  apiKey: "AIzaSyBq3M6NlHFAKMlXR2B7AzmRBB3TNWqS9TU",
+  authDomain: "orders-3fc07.firebaseapp.com",
+  projectId: "orders-3fc07",
+  storageBucket: "orders-3fc07.appspot.com",
+  messagingSenderId: "845653975774",
+  appId: "1:845653975774:web:b4b0adacc766c94498584f"
+};
+
+        firebase.initializeApp(firebaseConfig);
+
+        function checkOrderStatus() {
+            const orderId = document.getElementById('orderId').value;
+            firebase.database().ref('orders/' + orderId).once('value', snapshot => {
+                const orderData = snapshot.val();
+                const statusDisplay = document.getElementById('orderStatus');
+                if (orderData) {
+                    statusDisplay.innerHTML = `Order Status: <strong>${orderData.status}</strong>`;
+                } else {
+                    statusDisplay.innerHTML = "Order ID not found.";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
